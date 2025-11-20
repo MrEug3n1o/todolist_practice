@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views import View
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .models import Task, Tag
@@ -25,10 +26,14 @@ class TaskDeleteView(DeleteView):
     template_name = 'todolist/task_confirm_delete.html'
     success_url = reverse_lazy('home')
 
-def toggle_task_status(request, pk):
-    task = get_object_or_404(Task, pk=pk)
-    task.toggle_status()
-    return redirect('home')
+
+class TaskToggleView(View):
+
+    def post(self, request, pk):
+        task = get_object_or_404(Task, pk=pk)
+        task.toggle_status()
+        return redirect('home')
+
 
 class TagListView(ListView):
     model = Tag
